@@ -1,5 +1,5 @@
 var express = require('express');
-var secretKey = require('../jwt/const')
+var secretKey = require('../jwt/constent')
 var router = express.Router();
 // 导入MySQL模块
 var mysql = require('mysql');
@@ -23,7 +23,7 @@ router.route(['/', '/login'])
   .post((req, res, next) => {
     pool.getConnection((err, connection) => {
       var param = req.body || req.params;
-      // console.log(param);
+      console.log('req.body is ', req.body, param);
       connection.query(userSQL.loginVerify, [param.email, param.password], (err, result) => {
         console.log('result is ', result);
         if (err) {
@@ -33,14 +33,21 @@ router.route(['/', '/login'])
           })
         } else {
           //result返回一个数组
-          if (result[0].id) {
+          if (result[0]) {
             const jwt = require('jsonwebtoken')
-            let token = jwt.sign({id:result[0].id}, secretKey, {
-              expiresIn: 60 * 60 * 24
-            });
+            let token = jwt.sign({
+              id: result[0].id,
+              permissions: [
+                "user:write"
+              ]
+            },
+              secretKey,
+              {
+                expiresIn: 60 * 60 * 24 * 7
+              });
             res.json({
-              isLogin:true,
-              token:token
+              isLogin: true,
+              token: token
             })
           } else {
             res.send({

@@ -1,9 +1,9 @@
 const expressJwt = require('express-jwt');
-const { secretKey } = require('./const');
-const jwtAuth = expressJwt({ secret: 'simple_trello' }).unless({
+var secretKey  = require('./constent');
+//跳过路由 '/login','/'
+const jwtAuth = expressJwt({ secret: secretKey }).unless({
     path: [
         '/login', '/'
     ]
 });
-
 module.exports = jwtAuth;

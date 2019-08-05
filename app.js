@@ -6,16 +6,12 @@ var logger = require('morgan');
 var jwtAuth = require('./jwt/middleware')
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var loginRouter = require('./routes/loginVerify');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-//设置密钥
-app.set('jwtTokenSecret', 'YOUR_SCRET_STRING');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,7 +26,7 @@ app.all('*',function (req, res, next) {
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 
   if (req.method == 'OPTIONS') {
-    res.send(200); /让options请求快速返回/
+    res.send(200); /*让options请求快速返回*/
   }
   else {
     next();
@@ -38,7 +34,10 @@ app.all('*',function (req, res, next) {
 });
 
 app.use(jwtAuth);
-app.use('/', loginRouter);
+console.log('jwtAuth is ',jwtAuth);
+
+app.use('/', indexRouter);
+
 //app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
