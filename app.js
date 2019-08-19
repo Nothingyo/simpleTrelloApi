@@ -34,7 +34,7 @@ app.all('*',function (req, res, next) {
 });
 
 app.use(jwtAuth);
-console.log('jwtAuth is ',jwtAuth);
+// console.log('jwtAuth is ',jwtAuth);
 
 app.use('/', indexRouter);
 

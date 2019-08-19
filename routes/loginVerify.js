@@ -3,8 +3,9 @@ var secretKey = require('../jwt/constent')
 var router = express.Router();
 // 导入MySQL模块
 var mysql = require('mysql');
+// var mariadb=require('mariadb');
 var dbConfig = require('../db/DBConfig');
-var userSQL = require('../db/usersql');
+var userSQL = require('./../db/usersql');
 // 使用DBConfig.js的配置信息创建一个MySQL连接池
 var pool = mysql.createPool(dbConfig.mysql);
 // 响应一个JSON数据
@@ -31,31 +32,31 @@ router.route(['/', '/login'])
           res.send({
             "isLogin": "false"
           })
-        } else {
-          //result返回一个数组
-          if (result[0]) {
-            const jwt = require('jsonwebtoken')
-            let token = jwt.sign({
-              id: result[0].id,
-              permissions: [
-                "user:write"
-              ]
-            },
-              secretKey,
-              {
-                expiresIn: 60 * 60 * 24 * 7
-              });
-            res.json({
-              isLogin: true,
-              token: token
-            })
-          } else {
-            res.send({
-              "isLogin": "false"
-            })
-          }
-
         }
+        //result返回一个数组
+        if (result[0]) {
+          const jwt = require('jsonwebtoken')
+          let token = jwt.sign({
+            id: result[0].id,
+            permissions: [
+              "user:write"
+            ]
+          },
+            secretKey,
+            {
+              expiresIn: 60 * 60 * 24 * 7
+            });
+          res.json({
+            isLogin: true,
+            token: token
+          })
+        } else {
+          res.send({
+            "isLogin": "false"
+          })
+        }
+
+
         connection.release();
       });
     });

@@ -1,13 +1,11 @@
-const expressJwt = require('express-jwt');
-var secretKey = require('../jwt/constent');
-
 var mysql = require('mysql');
 var dbConfig = require('../db/DBConfig');
 var fakeBoardSQL = require('../db/fakeBoardsql');
 var pool = mysql.createPool(dbConfig.mysql);
 
-var express = require('express')
+var express = require('express');
 var router = express.Router();
+// jwt验证权限：user:write
 var guard = require('express-jwt-permissions')();
 router.use(guard.check(['user:write']));
 router.post('/delete', (req, res, next) => {
